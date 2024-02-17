@@ -30,11 +30,19 @@ async function getContactById(contactId) {
 async function removeContact(contactId) {
   const contacts = await readContacts();
 
-  const newContacts = contacts.filter((c) => c.id !== contactId);
+  const index = contacts.findIndex((contact) => contact.id === contactId);
 
-  await writeContacts(newContacts);
+  if (index === -1) {
+    return undefined;
+  }
 
-  return newContacts;
+  const deletedBook = contacts[index];
+
+  contacts.splice(index, 1);
+
+  await writeContacts(contacts);
+
+  return deletedBook;
 }
 
 async function addContact(name, email, phone) {
